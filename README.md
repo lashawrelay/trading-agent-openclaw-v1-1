@@ -4,7 +4,9 @@ This package now includes a full live runner:
 - Pulls account + market data from Alpaca crypto endpoints
 - Builds dynamic top-N universe (volume + spread)
 - Computes technical state (ATR, RSI, SMA20/50)
-- Calls LLM with strict JSON contract
+- Gets proposal via either:
+  - direct LLM API, or
+  - OpenClaw skill mode (`llm.mode=external_skill`) without storing an LLM key in this app
 - Runs deterministic validation gates
 - Submits LIMIT order (or paper-simulates when `paper_mode=true`)
 
@@ -43,6 +45,14 @@ Edit `config.json` with your Alpaca + LLM keys.
 ```bash
 ./.venv/bin/python live_runner.py
 ```
+
+## External skill mode (no LLM key in app)
+Default config uses `llm.mode=external_skill`.
+
+Flow:
+1. Run `live_runner.py` once; it writes `input_snapshot.json` and exits if `proposal.json` is missing.
+2. Use OpenClaw + skill `skills/trading-proposal-json` to generate strict proposal JSON into `proposal.json`.
+3. Run `live_runner.py` again to validate and execute/paper-execute.
 
 ## Run daily critique (23:55 UTC)
 ```bash

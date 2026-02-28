@@ -23,12 +23,53 @@ def load_cfg() -> Dict[str, Any]:
     return load_json(CFG_PATH, {})
 
 
+def _build_llm_input(equity: float, universe_objs: list, symbol_state: dict, daily_context: str, t: dict) -> dict:
+    return {
+        "timestamp_utc": now_iso(),
+        "equity": equity,
+        "universe": universe_objs,
+        "selected_symbol_state": symbol_state,
+        "recent_news_sentiment": "neutral",
+        "daily_context": daily_context,
+        "constraints": {
+            "max_trades_day": t["max_trades_per_day"],
+            "limit_only": True,
+            "max_position_pct": t["max_position_pct"],
+        },
+    }
+
+
+def _get_proposal(cfg: dict, llm_input: dict) -> dict:
+    llm_cfg = cfg.get("llm", {})
+    mode = llm_cfg.get("mode", "direct_api")
+
+    if mode == "external_skill":
+        proposal_path = BASE / cfg["runtime"].get("proposal_file", "proposal.json")
+        snapshot_out = BASE / cfg["runtime"].get("snapshot_file", "input_snapshot.json")
+        payload = {
+            "llm_prompt": PROMPT_PATH.read_text(encoding="utf-8"),
+            "llm_input": llm_input,
+            "instruction": "Use OpenClaw skill/agent to generate strict JSON proposal and write it to proposal_file.",
+        }
+        with open(snapshot_out, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2)
+        if not proposal_path.exists():
+            raise FileNotFoundError(
+                f"external_skill mode expects {proposal_path}. Generate proposal JSON with OpenClaw and rerun."
+            )
+        with open(proposal_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    llm = LLMClient(llm_cfg["api_key"], llm_cfg["base_url"], llm_cfg["model"])
+    system_prompt = PROMPT_PATH.read_text(encoding="utf-8")
+    return llm.propose(system_prompt, llm_input)
+
+
 def main():
     cfg = load_cfg()
     t = cfg["trading"]
     rt = cfg["runtime"]
     alp = cfg["alpaca"]
-    llm_cfg = cfg["llm"]
 
     engine = DeterministicEngine(
         EngineConfig(
@@ -43,7 +84,6 @@ def main():
 
     broker = AlpacaBroker(alp["api_key"], alp["api_secret"], alp["base_url"])
     md = AlpacaMarketData(alp["api_key"], alp["api_secret"], alp["data_url"])
-    llm = LLMClient(llm_cfg["api_key"], llm_cfg["base_url"], llm_cfg["model"])
 
     state_path = BASE / rt["state_file"]
     log_path = BASE / rt["trade_log"]
@@ -81,22 +121,8 @@ def main():
     symbol_state = md.symbol_state(selected)
     daily_context = context_path.read_text(encoding="utf-8") if context_path.exists() else ""
 
-    llm_input = {
-        "timestamp_utc": now_iso(),
-        "equity": equity,
-        "universe": universe_objs,
-        "selected_symbol_state": symbol_state,
-        "recent_news_sentiment": "neutral",
-        "daily_context": daily_context,
-        "constraints": {
-            "max_trades_day": t["max_trades_per_day"],
-            "limit_only": True,
-            "max_position_pct": t["max_position_pct"],
-        },
-    }
-
-    system_prompt = PROMPT_PATH.read_text(encoding="utf-8")
-    proposal = llm.propose(system_prompt, llm_input)
+    llm_input = _build_llm_input(equity, universe_objs, symbol_state, daily_context, t)
+    proposal = _get_proposal(cfg, llm_input)
     rejection = engine.validate_proposal(proposal, state, equity, universe, float(symbol_state["spread_pct"]))
 
     event = {

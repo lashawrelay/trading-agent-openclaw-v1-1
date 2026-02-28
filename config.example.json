@@ -6,7 +6,8 @@
     "data_url": "https://data.alpaca.markets"
   },
   "llm": {
-    "api_key": "YOUR_LLM_KEY",
+    "mode": "external_skill",
+    "api_key": "YOUR_LLM_KEY_IF_USING_DIRECT_API",
     "base_url": "https://api.openai.com/v1",
     "model": "gpt-4o-mini"
   },
@@ -23,6 +24,8 @@
     "paper_mode": true,
     "state_file": "data/state.json",
     "trade_log": "data/trade_log.jsonl",
-    "context_file": "context.txt"
+    "context_file": "context.txt",
+    "snapshot_file": "input_snapshot.json",
+    "proposal_file": "proposal.json"
   }
 }
