@@ -46,6 +46,12 @@ Edit `config.json` with your Alpaca + LLM keys.
 ./.venv/bin/python live_runner.py
 ```
 
+## Run with notifications wrapper
+```bash
+./.venv/bin/python run_and_notify.py
+```
+Sends Telegram only for important events (`ORDER_SUBMITTED`, `HALTED_FOR_DAY`, `WEEKLY_FLATTEN`, `STOP_FOREVER`, run errors).
+
 ## External skill mode (no LLM key in app)
 Default config uses `llm.mode=external_skill`.
 

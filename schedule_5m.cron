@@ -1,0 +1,2 @@
+*/5 * * * * cd /home/lashaws/.openclaw/workspace/trading_agent_openclaw_v1_1 && ./.venv/bin/python run_and_notify.py >> logs/live.log 2>&1
+55 23 * * * cd /home/lashaws/.openclaw/workspace/trading_agent_openclaw_v1_1 && ./.venv/bin/python daily_critique.py >> logs/critique.log 2>&1
