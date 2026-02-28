@@ -1,0 +1,25 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build release artifact
+        run: |
+          mkdir -p dist
+          tar -czf dist/trading-agent-openclaw-v1-1.tar.gz \
+            *.py *.md requirements.txt config.example.json input_snapshot.example.json .github
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: trading-agent-openclaw-v1-1
+          path: dist/trading-agent-openclaw-v1-1.tar.gz
