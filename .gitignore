@@ -10,7 +10,6 @@ context.txt
 
 # Local secrets/config
 config.json
-watchdog_config.json
 .env
 input_snapshot.json
 proposal.json

@@ -1,1 +1,0 @@
-*/15 * * * * cd /home/lashaws/.openclaw/workspace/trading_agent_openclaw_v1_1 && ./.venv/bin/python security_watchdog.py >> logs/security_watchdog.log 2>&1
