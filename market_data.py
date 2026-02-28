@@ -17,7 +17,7 @@ class AlpacaMarketData:
         }
 
     def bars(self, symbol: str, timeframe: str, start: datetime, end: datetime, limit: int = 1000) -> List[Dict[str, Any]]:
-        sym = symbol.replace("/", "")
+        sym = symbol
         params = {
             "symbols": sym,
             "timeframe": timeframe,
@@ -30,7 +30,7 @@ class AlpacaMarketData:
         return r.json().get("bars", {}).get(sym, [])
 
     def latest_quote(self, symbol: str) -> Dict[str, Any]:
-        sym = symbol.replace("/", "")
+        sym = symbol
         r = requests.get(
             f"{self.data_url}/v1beta3/crypto/us/latest/quotes?symbols={sym}",
             headers=self.headers,
