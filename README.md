@@ -52,6 +52,14 @@ Edit `config.json` with your Alpaca + LLM keys.
 ```
 Sends Telegram only for important events (`ORDER_SUBMITTED`, `HALTED_FOR_DAY`, `WEEKLY_FLATTEN`, `STOP_FOREVER`, run errors).
 
+## Security watchdog (alerts on posture drift)
+```bash
+cp watchdog_config.example.json watchdog_config.json
+./.venv/bin/python security_watchdog.py
+```
+Recommended schedule: every 15 minutes.
+It alerts when things drift (e.g., public funnel on, SSH weak settings, unexpected open ports, Gmail funnel re-enabled).
+
 ## External skill mode (no LLM key in app)
 Default config uses `llm.mode=external_skill`.
 
