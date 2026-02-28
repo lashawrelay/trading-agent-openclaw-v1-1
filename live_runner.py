@@ -1,4 +1,5 @@
 import json
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
@@ -53,6 +54,15 @@ def _get_proposal(cfg: dict, llm_input: dict) -> dict:
         }
         with open(snapshot_out, "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=2)
+        rt = cfg.get("runtime", {})
+        if not proposal_path.exists() and rt.get("auto_generate_proposal") and rt.get("proposal_command"):
+            cmd = rt["proposal_command"]
+            proc = subprocess.run(cmd, shell=True, cwd=str(BASE), capture_output=True, text=True)
+            if proc.returncode != 0:
+                raise RuntimeError(
+                    f"proposal_command failed ({proc.returncode}): {proc.stderr.strip() or proc.stdout.strip()}"
+                )
+
         if not proposal_path.exists():
             raise FileNotFoundError(
                 f"external_skill mode expects {proposal_path}. Generate proposal JSON with OpenClaw and rerun."

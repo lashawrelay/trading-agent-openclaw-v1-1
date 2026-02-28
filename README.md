@@ -49,10 +49,15 @@ Edit `config.json` with your Alpaca + LLM keys.
 ## External skill mode (no LLM key in app)
 Default config uses `llm.mode=external_skill`.
 
-Flow:
-1. Run `live_runner.py` once; it writes `input_snapshot.json` and exits if `proposal.json` is missing.
-2. Use OpenClaw + skill `skills/trading-proposal-json` to generate strict proposal JSON into `proposal.json`.
-3. Run `live_runner.py` again to validate and execute/paper-execute.
+One-command flow (enabled by default):
+1. `live_runner.py` writes `input_snapshot.json`.
+2. It runs `runtime.proposal_command` to generate `proposal.json`.
+3. It validates and executes/paper-executes in the same run.
+
+Default proposal generator:
+- `skills/trading-proposal-json/generate_proposal.py`
+
+You can replace `proposal_command` with your own OpenClaw task/skill command later.
 
 ## Run daily critique (23:55 UTC)
 ```bash

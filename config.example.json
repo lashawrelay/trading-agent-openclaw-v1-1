@@ -26,6 +26,8 @@
     "trade_log": "data/trade_log.jsonl",
     "context_file": "context.txt",
     "snapshot_file": "input_snapshot.json",
-    "proposal_file": "proposal.json"
+    "proposal_file": "proposal.json",
+    "auto_generate_proposal": true,
+    "proposal_command": "./.venv/bin/python skills/trading-proposal-json/generate_proposal.py"
   }
 }
