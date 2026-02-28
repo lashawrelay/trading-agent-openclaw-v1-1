@@ -1,0 +1,31 @@
+{
+  "account": {
+    "equity": 100.0
+  },
+  "universe": ["BTC/USD", "ETH/USD", "SOL/USD", "XRP/USD"],
+  "selected_symbol_state": {
+    "symbol": "BTC/USD",
+    "spread_pct": 0.0008,
+    "atr_1m": 42.1,
+    "rsi_1m": 35.2,
+    "sma20_1h": 51200.0,
+    "sma50_1h": 51520.0
+  },
+  "llm_proposal": {
+    "action": "TRADE",
+    "symbol": "BTC/USD",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "position_size_pct": 25,
+    "limit_price": 51234.5,
+    "stop_loss_price": 50890.0,
+    "take_profit_price": 51980.0,
+    "rationale": {
+      "technical_summary": "RSI near oversold, ATR elevated.",
+      "sentiment": "Neutral-to-positive",
+      "regime_identified": "mean_reversion",
+      "fee_hurdle_cleared": true
+    },
+    "confidence_score": 85
+  }
+}

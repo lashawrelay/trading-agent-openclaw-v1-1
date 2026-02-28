@@ -1,0 +1,28 @@
+{
+  "alpaca": {
+    "api_key": "YOUR_ALPACA_KEY",
+    "api_secret": "YOUR_ALPACA_SECRET",
+    "base_url": "https://paper-api.alpaca.markets",
+    "data_url": "https://data.alpaca.markets"
+  },
+  "llm": {
+    "api_key": "YOUR_LLM_KEY",
+    "base_url": "https://api.openai.com/v1",
+    "model": "gpt-4o-mini"
+  },
+  "trading": {
+    "start_equity": 100.0,
+    "daily_max_drawdown_pct": 10.0,
+    "max_trades_per_day": 5,
+    "max_position_pct": 30.0,
+    "top_n": 4,
+    "maker_fee_bps": 10,
+    "candidate_symbols": ["BTC/USD", "ETH/USD", "SOL/USD", "DOGE/USD", "AVAX/USD", "XRP/USD", "LINK/USD", "ADA/USD"]
+  },
+  "runtime": {
+    "paper_mode": true,
+    "state_file": "data/state.json",
+    "trade_log": "data/trade_log.jsonl",
+    "context_file": "context.txt"
+  }
+}
